@@ -2,7 +2,6 @@ import math, sys, random
 from panda3d.core import Vec3
 
 
-
 def Cloud(radius =1):
 
     x = 2 * random.random() - 1

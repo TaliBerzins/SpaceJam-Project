@@ -17,82 +17,81 @@ class MyApp(ShowBase):
 
         self.accept('escape', self.quit)
 
-        # Camera movement
-        self.moveSpeed = 500
-        self.mouseSensitivity = 100
+        # # Camera movement
+        # self.moveSpeed = 500
+        # self.mouseSensitivity = 100
 
-        # Camera rotation
-        self.cameraHeading = 0
-        self.cameraPitch = 0
+        # # Camera rotation
+        # self.cameraHeading = 0
+        # self.cameraPitch = 0
 
-        # Movement keys
-        self.keys = {
-            "forward": False,
-            "backward": False,
-            "left": False,
-            "right": False,
-            "up": False,
-            "down": False
-        }
+        # # Movement keys
+        # self.keys = {
+        #     "forward": False,
+        #     "backward": False,
+        #     "left": False,
+        #     "right": False,
+        #     "up": False,
+        #     "down": False
+        # }
 
-        # W/S/A/D
-        self.accept("w", self.setKey, ["forward", True])
-        self.accept("w-up", self.setKey, ["forward", False])
+        # # W/S/A/D
+        # self.accept("w", self.setKey, ["forward", True])
+        # self.accept("w-up", self.setKey, ["forward", False])
 
-        self.accept("s", self.setKey, ["backward", True])
-        self.accept("s-up", self.setKey, ["backward", False])
+        # self.accept("s", self.setKey, ["backward", True])
+        # self.accept("s-up", self.setKey, ["backward", False])
 
-        self.accept("a", self.setKey, ["left", True])
-        self.accept("a-up", self.setKey, ["left", False])
+        # self.accept("a", self.setKey, ["left", True])
+        # self.accept("a-up", self.setKey, ["left", False])
 
-        self.accept("d", self.setKey, ["right", True])
-        self.accept("d-up", self.setKey, ["right", False])
+        # self.accept("d", self.setKey, ["right", True])
+        # self.accept("d-up", self.setKey, ["right", False])
 
-        # Space / Shift
-        self.accept("space", self.setKey, ["up", True])
-        self.accept("space-up", self.setKey, ["up", False])
+        # # Space / Shift
+        # self.accept("space", self.setKey, ["up", True])
+        # self.accept("space-up", self.setKey, ["up", False])
 
-        self.accept("shift", self.setKey, ["down", True])
-        self.accept("shift-up", self.setKey, ["down", False])
+        # self.accept("shift", self.setKey, ["down", True])
+        # self.accept("shift-up", self.setKey, ["down", False])
 
-        # Mouse
-        self.accept("mouse1", self.startMouseLook)
-        self.accept("mouse1-up", self.stopMouseLook)
+        # # Mouse
+        # self.accept("mouse1", self.startMouseLook)
+        # self.accept("mouse1-up", self.stopMouseLook)
 
-        self.mouseLooking = False
+        # self.mouseLooking = False
 
-        # Mouse wheel
-        self.accept("wheel_up", self.moveForward)
-        self.accept("wheel_down", self.moveBackward)
+        # # Mouse wheel
+        # self.accept("wheel_up", self.moveForward)
+        # self.accept("wheel_down", self.moveBackward)
 
-        # Update every frame
-        self.taskMgr.add(self.updateCamera, "updateCamera")
-
-
+        # # Update every frame
+        # self.taskMgr.add(self.updateCamera, "updateCamera")
 
 
 
-        self.Player = spaceJamClasses.Player(self.loader, "./Assets/Player/sphere.egg", self.render, "Player", (0, 0, 0), 100)
+
+
 
 
 
         self.Universe = spaceJamClasses.Universe(self.loader, "./Assets/Universe/Universe.x", self.render, "Universe", "./Assets/Universe/images.jpeg", (0, 0, 0), 10000)
-        self.Planet1 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet1", "./Assets/Planets/images-1.jpeg", (-6000, -3000, -800), 250)
+        self.Planet1 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet1", "./Assets/Planets/images-1.jpeg", (-6000, 6000, -800), 250)
         self.Planet2 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet2", "./Assets/Planets/images-2.jpeg", (0, 6000, 0), 300)
         self.Planet3 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet3", "./Assets/Planets/images-3.jpeg", (500, -5000, 200), 500)
-        self.Planet4 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet4", "./Assets/Planets/images-4.jpeg", (300, 6000, 500), 150)
+        self.Planet4 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet4", "./Assets/Planets/images-4.jpeg", (300, 6000, 2000), 150)
         self.Planet5 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet5", "./Assets/Planets/images-5.jpeg", (700, -2000, 100), 500)
         self.Planet6 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet6", "./Assets/Planets/images-6.jpeg", (0, -9000, -1400), 700)
 
         self.SpaceStation1 = spaceJamClasses.SpaceStation(self.loader, "./Assets/Space Station/spaceStation.x", self.render, 'Space Station', "./Assets/Space Station/SpaceStation1_Dif2.png", (1500, 1000, -100), 40)
 
 
-        self.Hero = spaceJamClasses.Planet(self.loader, "./Assets/Spaceships/Dumbledore.egg", self.render, "Hero", "./Assets/Spaceships/spacejet_N.png", Vec3(1000, 1200, -50), 50)
+        self.Hero = spaceJamClasses.SpaceShip(self.loader, self.camera,"./Assets/Spaceships/Dumbledore.egg", self.render, "Hero", "./Assets/Spaceships/spacejet_N.png", Vec3(1000, 1200, -50), 50)
+        
 
 
 
 
-        self.planets = []
 
 
         def DrawBaseballSeams(self, centralObject, droneName, step, numSeams, radius = 1):
@@ -142,94 +141,97 @@ class MyApp(ShowBase):
             DrawCircleY(self, self.Planet3, nickName, theta )
             DrawCircleZ(self, self.Planet4, nickName, theta)
 
-        
+        self.Hero.setKeyBindings()
 
 
 
+    # def SetCamera(self) :
+    #     self.disableMouse()
+    #     self.camera.reparentTo(self.Hero.modelNode)
+    #     self.camera.setFluidPos(0, 1, 0)
+
+    # def setKey(self, key, value):
+    #     self.keys[key] = value
 
 
-    def setKey(self, key, value):
-        self.keys[key] = value
+    # def startMouseLook(self):
+    #     self.mouseLooking = True
 
 
-    def startMouseLook(self):
-        self.mouseLooking = True
+    # def stopMouseLook(self):
+    #     self.mouseLooking = False
 
 
-    def stopMouseLook(self):
-        self.mouseLooking = False
+    # def moveForward(self):
+    #     self.camera.setY(self.camera.getY() + 200)
 
 
-    def moveForward(self):
-        self.camera.setY(self.camera.getY() + 200)
+    # def moveBackward(self):
+    #     self.camera.setY(self.camera.getY() - 200)
 
 
-    def moveBackward(self):
-        self.camera.setY(self.camera.getY() - 200)
+    # def updateCamera(self, task):
 
+    #     dt = globalClock.getDt()
 
-    def updateCamera(self, task):
+    #     # -------------------------
+    #     # Mouse rotation
+    #     # -------------------------
 
-        dt = globalClock.getDt()
+    #     if self.mouseLooking and self.mouseWatcherNode.hasMouse():
 
-        # -------------------------
-        # Mouse rotation
-        # -------------------------
+    #         mouseX = self.mouseWatcherNode.getMouseX()
+    #         mouseY = self.mouseWatcherNode.getMouseY()
 
-        if self.mouseLooking and self.mouseWatcherNode.hasMouse():
+    #         self.cameraHeading -= mouseX * self.mouseSensitivity * dt
+    #         self.cameraPitch += mouseY * self.mouseSensitivity * dt
 
-            mouseX = self.mouseWatcherNode.getMouseX()
-            mouseY = self.mouseWatcherNode.getMouseY()
+    #         # Prevent camera from flipping upside down
+    #         self.cameraPitch = max(-89, min(89, self.cameraPitch))
 
-            self.cameraHeading -= mouseX * self.mouseSensitivity * dt
-            self.cameraPitch += mouseY * self.mouseSensitivity * dt
+    #         self.camera.setHpr(
+    #             self.cameraHeading,
+    #             self.cameraPitch,
+    #             0
+    #         )
 
-            # Prevent camera from flipping upside down
-            self.cameraPitch = max(-89, min(89, self.cameraPitch))
+    #     # -------------------------
+    #     # Keyboard movement
+    #     # -------------------------
 
-            self.camera.setHpr(
-                self.cameraHeading,
-                self.cameraPitch,
-                0
-            )
+    #     movement = Vec3(0, 0, 0)
 
-        # -------------------------
-        # Keyboard movement
-        # -------------------------
+    #     if self.keys["forward"]:
+    #         movement.y += 1
 
-        movement = Vec3(0, 0, 0)
+    #     if self.keys["backward"]:
+    #         movement.y -= 1
 
-        if self.keys["forward"]:
-            movement.y += 1
+    #     if self.keys["left"]:
+    #         movement.x -= 1
 
-        if self.keys["backward"]:
-            movement.y -= 1
+    #     if self.keys["right"]:
+    #         movement.x += 1
 
-        if self.keys["left"]:
-            movement.x -= 1
+    #     if self.keys["up"]:
+    #         movement.z += 1
 
-        if self.keys["right"]:
-            movement.x += 1
+    #     if self.keys["down"]:
+    #         movement.z -= 1
 
-        if self.keys["up"]:
-            movement.z += 1
+    #     # Normalize so diagonal movement isn't faster
+    #     if movement.length() > 0:
+    #         movement.normalize()
 
-        if self.keys["down"]:
-            movement.z -= 1
+    #         movement *= self.moveSpeed * dt
 
-        # Normalize so diagonal movement isn't faster
-        if movement.length() > 0:
-            movement.normalize()
+    #         # Move relative to camera's orientation
+    #         self.camera.setPos(
+    #             self.camera,
+    #             movement
+    #         )
 
-            movement *= self.moveSpeed * dt
-
-            # Move relative to camera's orientation
-            self.camera.setPos(
-                self.camera,
-                movement
-            )
-
-        return task.cont
+    #     return task.cont
 
     def quit(self):
         sys.exit()
