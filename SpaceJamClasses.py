@@ -100,10 +100,26 @@ class SpaceShip(DirectObject):
 
     def setKeyBindings(self):
 
-              self.accept('w', self.Thrust, [1])
-              self.accept('w-up', self.Thrust, [0])
-              self.accept("a", self.LeftTurn, [1])
-              self.accept("a-up", self.LeftTurn, [0])
+        self.accept('w', self.Thrust, [1])
+        self.accept('w-up', self.Thrust, [0])
+        # Heading/Yaw (Turning Left/Right)
+        self.accept("a", self.Turn, [1, 1])       # Left (positive direction)
+        self.accept("a-up", self.Turn, [1, 0])
+        self.accept("d", self.Turn, [-1, 1])      # Right (negative direction)
+        self.accept("d-up", self.Turn, [-1, 0])
+
+        # Pitch (Pitching Up/Down)
+        self.accept("arrow_up", self.Pitch, [1, 1])    # Nose Up
+        self.accept("arrow_up-up", self.Pitch, [1, 0])
+        self.accept("arrow_down", self.Pitch, [-1, 1])  # Nose Down
+        self.accept("arrow_down-up", self.Pitch, [-1, 0])
+
+        # Roll (Banking Left/Right)
+        self.accept("q", self.Roll, [1, 1])       # Roll Left
+        self.accept("q-up", self.Roll, [1, 0])
+        self.accept("e", self.Roll, [-1, 1])      # Roll Right
+        self.accept("e-up", self.Roll, [-1, 0])
+
 
     def Thrust(self, keyDown):
                 if keyDown:
@@ -123,19 +139,52 @@ class SpaceShip(DirectObject):
                 return task.cont
 
 
+    # YAW LEFT / RIGHT (Z-Axis Rotation)
+    def Turn(self, direction, keyDown):
+        # direction: 1 for left, -1 for right
+        task_name = 'turn-task'
+        if keyDown:
+            base.taskMgr.add(self.ApplyTurn, task_name, extraArgs=[direction], appendTask=True)
+        else:
+            base.taskMgr.remove(task_name)
 
-    def LeftTurn(self, keyDown):
-              if keyDown:
-                    base.taskMgr.add(self.ApplyLeftTurn, 'left-turn')
+    def ApplyTurn(self, direction, task):
+        rate = .5
+        # Modifying H (Heading/Yaw) steers the ship left or right
+        self.modelNode.setH(self.modelNode.getH() + (rate * direction))
+        return task.cont
 
-              else:
-                    base.taskMgr.remove('left-turn')
 
-    def ApplyLeftTurn(self, task):
-              # Half a degree every frame.
-              rate = .5
-              self.modelNode.setH(self.modelNode.getH() + rate)
-              return task.cont
+
+    # --- PITCH UP / DOWN (X-Axis Rotation) ---
+    def Pitch(self, direction, keyDown):
+        # direction: 1 for up, -1 for down
+        task_name = 'pitch-task'
+        if keyDown:
+            base.taskMgr.add(self.ApplyPitch, task_name, extraArgs=[direction], appendTask=True)
+        else:
+            base.taskMgr.remove(task_name)
+
+    def ApplyPitch(self, direction, task):
+        rate = .5
+        # Modifying P (Pitch) tilts the ship nose up or down
+        self.modelNode.setP(self.modelNode.getP() + (rate * direction))
+        return task.cont
+
+
+    #  ROLL LEFT / RIGHT (Y-Axis Rotation) 
+    def Roll(self, direction, keyDown):
+        # direction: 1 for roll left, -1 for roll right
+        task_name = 'roll-task'
+        if keyDown:
+            base.taskMgr.add(self.ApplyRoll, task_name, extraArgs=[direction], appendTask=True)
+        else:
+            base.taskMgr.remove(task_name)
+
+    def ApplyRoll(self, direction, task):
+        rate = .5
+        self.modelNode.setR(self.modelNode.getR() + (rate * direction))
+        return task.cont
 
 
         
