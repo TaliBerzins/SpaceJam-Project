@@ -63,7 +63,7 @@ class SpaceShip(SphereCollideObject):
                         base.taskMgr.remove('forward-thrust')
 
     def ApplyThrust(self, task):
-                rate = 5
+                rate = 25
 
                 trajectory = self.render.getRelativeVector(self.modelNode, Vec3.forward())
                 trajectory.normalize()
@@ -83,7 +83,7 @@ class SpaceShip(SphereCollideObject):
             base.taskMgr.remove(task_name)
 
     def ApplyTurn(self, direction, task):
-        rate = .5
+        rate = 2
         # Modifying H (Heading/Yaw) steers the ship left or right
         self.modelNode.setH(self.modelNode.getH() + (rate * direction))
         return task.cont
@@ -100,7 +100,7 @@ class SpaceShip(SphereCollideObject):
             base.taskMgr.remove(task_name)
 
     def ApplyPitch(self, direction, task):
-        rate = .5
+        rate = 2
         # Modifying P (Pitch) tilts the ship nose up or down
         self.modelNode.setP(self.modelNode.getP() + (rate * direction))
         return task.cont
@@ -116,6 +116,6 @@ class SpaceShip(SphereCollideObject):
             base.taskMgr.remove(task_name)
 
     def ApplyRoll(self, direction, task):
-        rate = .5
+        rate = 2
         self.modelNode.setR(self.modelNode.getR() + (rate * direction))
         return task.cont
