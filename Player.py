@@ -1,9 +1,10 @@
 from CollideObjectBase import SphereCollideObject
-from panda3d.core import Loader, NodePath, Vec3
+from panda3d.core import Loader, NodePath, Vec3, TransparencyAttrib
 from direct.task.Task import TaskManager
 from typing import Callable
 from direct.task import Task
-
+from direct.gui.OnscreenImage import OnscreenImage
+from SpaceJamClasses import Missile
 
 class SpaceShip(SphereCollideObject):
 
@@ -20,6 +21,7 @@ class SpaceShip(SphereCollideObject):
         self.accept = accept
         self.modelNode.setPos(posVec)
         self.modelNode.setScale(scaleVec)
+        self.loader = loader
 
         self.modelNode.setName(nodeName)
         tex = loader.loadTexture(texPath)
@@ -30,6 +32,9 @@ class SpaceShip(SphereCollideObject):
         self.camera.lookAt(self.modelNode)
 
         self.setKeyBindings()
+        self.reloadTime = .25
+        self.missileDistance = 4000
+        self.missileBay = 1
 
 
     def setKeyBindings(self):
@@ -53,6 +58,7 @@ class SpaceShip(SphereCollideObject):
         self.accept("q-up", self.Roll, [1, 0])
         self.accept("e", self.Roll, [-1, 1])      # Roll Right
         self.accept("e-up", self.Roll, [-1, 0])
+        self.accept('f', self.Fire)
 
 
     def Thrust(self, keyDown):
@@ -119,3 +125,67 @@ class SpaceShip(SphereCollideObject):
         rate = 2
         self.modelNode.setR(self.modelNode.getR() + (rate * direction))
         return task.cont
+    
+    def Fire(self):
+         if self.missileBay:
+                travRate = self.missileDistance
+                aim = self.render.getRelativeVector(self.modelNode, Vec3.forward())
+                aim.normalize()
+                fireSolution = aim * travRate
+                inFront = aim * 150
+                travVec = fireSolution + self.modelNode.getPos()
+                self.missileBay -= 1
+                tag = 'Missile' + str(Missile.missileCount)
+
+                posVec = self.modelNode.getPos() + inFront
+                currentMissile = Missile(self.loader, './Assets/Phaser/phaser.egg', self.render, tag, posVec, 4.0)
+                Missile.Intervals[tag] = currentMissile.modelNode.posInterval(2.0, travVec, startPos = posVec, fluid = 1)
+                Missile.Intervals[tag].start()
+
+         else:
+          if not self.taskMgr.hasTaskNamed('reload'):
+                print("Initializing reload...")
+                self.taskMgr.doMethodLater(0, self.Reload, 'reload')
+                return Task.cont
+
+
+
+    def Reload(self, task):
+        if task.time > self.reloadTime:
+             self.missileBay += 1
+             print("Reload Complete")
+
+        if self.missileBay>1:
+            self.missileBay = 1
+
+        elif task.time <= self.reloadTime:
+             print("Reload processing...")
+             return Task.cont
+
+        return Task.done
+
+    def CheckIntervals(self, task):
+         for i in Missile.Intervals:
+              if not Missile.Intervals[i].isPlaying():
+                   Missile.cNodes[i].detachNode()
+                   Missile.fireModels[i].detachNode()
+                   del Missile.Intervals[i]
+                   del Missile.fireModels[i]
+                   del Missile.cNodes[i]
+                   del Missile.collisionSolids[i]
+                   print(i + ' has reached the end of its fire solution')
+                   break
+              return Task.cont
+         self.taskMgr.add(self.CheckIntervals, 'checkMissiles', 34)
+
+    def EnableHUD(self):
+         self.Hud = OnscreenImage(image = './Assets/Hud/Reticle3b.png', pos= Vec3(0, 0, 0), scale = 0.1)
+         self.Hud.setTransparency(TransparencyAttrib.MAlpha)
+
+            
+
+          
+
+
+
+

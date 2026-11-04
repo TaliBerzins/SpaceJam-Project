@@ -74,6 +74,32 @@ class Drone(SphereCollideObject):
         self.modelNode.setTexture(tex,1)
 
 
+class Missile(SphereCollideObject):
+
+    fireModels = {}
+    cNodes = {}
+    collisionSolids = {}
+    Intervals = {}
+    missileCount = 0
+    def _init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, posVec: Vec3, scaleVec: float = 1.0):
+                    super(Missile, self).__init__(loader, modelPath, parentNode, nodeName, Vec3(0, 0, 0), 3.0)
+    
+    
+                    self.modelNode.setScale(scaleVec)
+                    self.modelNode.setPos(posVec)
+                    
+                    Missile.missileCount += 1
+                    Missile.fireModels[nodeName] = self.modelNode
+                    Missile.cNodes[nodeName] = self.collisionNode
+    
+                    Missile.collisionSolids[nodeName] = self.collision.node().getSolid()
+                    Missile.cNodes[nodeName].show()
+                    print("Fire missile #" + str(Missile.missileCount))
+    
+                    
+    
+
+
 
 
 
