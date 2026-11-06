@@ -1,10 +1,14 @@
 from CollideObjectBase import SphereCollideObject
-from panda3d.core import Loader, NodePath, Vec3, TransparencyAttrib
+from panda3d.core import Loader, NodePath, Vec3, TransparencyAttrib, CollisionHandlerEvent, CollisionTraverser, CollisionHandlerPusher
 from direct.task.Task import TaskManager
 from typing import Callable
+from direct.interval.LerpInterval import LerpFunc
+from direct.particles.ParticleEffect import ParticleEffect
+import re
 from direct.task import Task
 from direct.gui.OnscreenImage import OnscreenImage
 from SpaceJamClasses import Missile
+
 
 class SpaceShip(SphereCollideObject):
 
@@ -35,7 +39,30 @@ class SpaceShip(SphereCollideObject):
         self.reloadTime = .25
         self.missileDistance = 4000
         self.missileBay = 1
+        self.cntExplode = 0
+        self.explodeIntervals = {}
+        self.traverser = CollisionTraverser()
+        self.traverser.traverse(self.render)
+        self.taskMgr.add(self.collisionLoop, "collisionTask")
 
+
+        self.handler = CollisionHandlerEvent()
+        self.handler.addInPattern('into')
+        self.accept('into', self.HandleInto)
+        self.taskMgr.add(self.CheckIntervals, 'checkMissiles', 34)
+        self.EnableHUD()
+        self.SetParticles()
+        
+
+        
+
+
+        
+
+    def collisionLoop(self, task):
+        # This must be called every single frame manually
+        self.traverser.traverse(self.render) 
+        return task.cont
 
     def setKeyBindings(self):
 
@@ -127,6 +154,7 @@ class SpaceShip(SphereCollideObject):
         return task.cont
     
     def Fire(self):
+
          if self.missileBay:
                 travRate = self.missileDistance
                 aim = self.render.getRelativeVector(self.modelNode, Vec3.forward())
@@ -141,6 +169,11 @@ class SpaceShip(SphereCollideObject):
                 currentMissile = Missile(self.loader, './Assets/Phaser/phaser.egg', self.render, tag, posVec, 4.0)
                 Missile.Intervals[tag] = currentMissile.modelNode.posInterval(2.0, travVec, startPos = posVec, fluid = 1)
                 Missile.Intervals[tag].start()
+
+                self.traverser.addCollider(currentMissile.collisionNode, self.handler)
+                self.traverser.showCollisions(self.render)
+
+
 
          else:
           if not self.taskMgr.hasTaskNamed('reload'):
@@ -175,12 +208,70 @@ class SpaceShip(SphereCollideObject):
                    del Missile.collisionSolids[i]
                    print(i + ' has reached the end of its fire solution')
                    break
-              return Task.cont
-         self.taskMgr.add(self.CheckIntervals, 'checkMissiles', 34)
+         return task.cont
+
 
     def EnableHUD(self):
          self.Hud = OnscreenImage(image = './Assets/Hud/Reticle3b.png', pos= Vec3(0, 0, 0), scale = 0.1)
          self.Hud.setTransparency(TransparencyAttrib.MAlpha)
+
+    def HandleInto(self, entry):
+        fromNode = entry.getFromNodePath().getName()
+        print("fromNode: " + fromNode)
+        intoNode = entry.getIntoNodePath().getName()
+        print("intoNode: " + intoNode)
+        intoPosition = Vec3(entry.getSurfacePoint(self.render))
+        tempVar = fromNode.split('_')
+        print("tempVar: " + str(tempVar))
+        shooter = tempVar[0]
+        print("Shooter: " + str(shooter))
+        tempVar = intoNode.split('_')
+        print("TempVar1: " + str(tempVar))
+        tempVar = intoNode.split('_')
+        print("TempVar2: " + str(tempVar))
+        victim = tempVar[0]
+        print("Victim: " + str(victim))
+        pattern = r'[0-9]'
+        strippedString = re.sub(pattern, '', victim)
+        print(strippedString)
+        if (strippedString == "Drone" or strippedString == "Planet" or strippedString == 'Space Station'):
+             print(victim, ' hit at ', intoPosition)
+             self.DestroyObject(victim, intoPosition)
+
+        print(shooter + 'is DONE.')
+        Missile.Intervals[shooter].finish()
+
+
+    def DestroyObject(self, hitID, hitPosition):
+
+         nodeID = self.render.find(hitID)
+         nodeID.detachNode()
+
+         self.explodeNode.setPos(hitPosition)
+         self.Explode()
+
+    def Explode(self):
+         self.cntExplode += 1
+         tag = 'particles-' + str(self.cntExplode)
+
+         self.explodeIntervals[tag] = LerpFunc(self.ExplodeLight, duration = 4.0)
+         self.explodeIntervals[tag].start()
+
+
+    def ExplodeLight(self, t):
+         if t == 1.0 and self.explodeEffect:
+              self.explodeEffect.disable()
+
+         elif t == 0:
+              self.explodeEffect.start(self.explodeNode)
+
+    def SetParticles(self):
+         base.enableParticles()
+         self.explodeEffect = ParticleEffect()
+         self.explodeEffect.loadConfig("./Assets/ParticleEffects/basic_xpld_efx.ptf")
+         self.explodeEffect.setScale(20)
+         self.explodeNode = self.render.attachNewNode('ExplosionEffects')
+
 
             
 

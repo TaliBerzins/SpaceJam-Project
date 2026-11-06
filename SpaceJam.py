@@ -100,6 +100,8 @@ class MyApp(ShowBase):
         self.cTrav.addCollider(self.Hero.collisionNode, self.pusher)
         self.cTrav.showCollisions(self.render)
 
+        
+
     
 
 
