@@ -21,6 +21,22 @@ class Planet(SphereCollideObject):
         tex = loader.loadTexture(texPath)
         self.modelNode.setTexture(tex,1)
 
+class Sun(SphereCollideObject):
+
+    def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath,
+                  nodeName: str, texPath: str, posVec: Vec3, scaleVec: float):
+        super(Sun, self). __init__(loader, modelPath, parentNode, nodeName, Vec3(0,0,0), 1.1)
+
+
+
+        self.modelNode.setPos(posVec)
+        self.modelNode.setScale(scaleVec)
+
+        self.modelNode.setName(nodeName)
+        tex = loader.loadTexture(texPath)
+        self.modelNode.setTexture(tex,1)
+
+
 
 class Universe(InverseSphereCollideObject):
 

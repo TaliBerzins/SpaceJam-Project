@@ -6,6 +6,11 @@ import SpaceJamClasses as spaceJamClasses
 import Player as playerClasses
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
 from CollideObjectBase import *
+from direct.task.Task import Task
+from direct.task.Task import TaskManager
+from direct.actor.Actor import Actor
+
+
 
 
 
@@ -14,83 +19,8 @@ class MyApp(ShowBase):
         ShowBase.__init__(self)
 
         self.disableMouse()
-
-
-
-
-
-        self.accept('escape', self.quit)
-
-
-        def setScene(self):
-            self.Universe = spaceJamClasses.Universe(self.loader, "./Assets/Universe/Universe.x", self.render, "Universe", "./Assets/Universe/images.jpeg", (0, 0, 0), 10000)
-            self.Planet1 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet1", "./Assets/Planets/images-1.jpeg", (-1000, 300, -800), 250)
-            self.Planet2 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet2", "./Assets/Planets/images-2.jpeg", (0, 6000, 0), 300)
-            self.Planet3 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet3", "./Assets/Planets/images-3.png", (500, -5000, 200), 500)
-            self.Planet4 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet4", "./Assets/Planets/images-4.png", (300, 6000, 2000), 150)
-            self.Planet5 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet5", "./Assets/Planets/images-5.jpeg", (700, -2000, 100), 500)
-            self.Planet6 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet6", "./Assets/Planets/images-6.jpeg", (0, -6000, -1400), 700)
-
-            self.SpaceStation1 = spaceJamClasses.SpaceStation(self.loader, "./Assets/Space Station/spaceStation.x", self.render, 'Space Station', "./Assets/Space Station/SpaceStation1_Dif2.png", (1500, 1000, -100), 40)
-
-
-            self.Hero = playerClasses.SpaceShip(self.loader, self.camera, self.taskMgr, self.accept,"./Assets/Spaceships/Dumbledore.egg", self.render, "Hero", "./Assets/Spaceships/spacejet_N.png", Vec3(1000, 1200, -50), 50)
-
-        setScene(self)
-        
-
-
-
-
-
-
-        def DrawBaseballSeams(self, centralObject, droneName, step, numSeams, radius = 1):
-            unitVec = defensePaths.BaseballSeams(step, numSeams, B= 0.4)
-            unitVec.normalize()
-            position = unitVec * radius * 250 + centralObject.modelNode.getPos()
-            spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position ,5)
-
-        def DrawCloudDefense(self, centralObject, droneName):
-            unitVec = defensePaths.Cloud()
-            unitVec.normalize()
-            position = unitVec * 500 + centralObject.modelNode.getPos()
-            spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
-
-
-        def DrawCircleX(self, centralObject, droneName, theta):
-            unitVec = defensePaths.circleX(theta)
-            unitVec.normalize()
-            position = unitVec * 600 + centralObject.modelNode.getPos()
-            spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
-
-
-        def DrawCircleY(self, centralObject, droneName, theta):
-            unitVec = defensePaths.circleY(theta)
-            unitVec.normalize()
-            position = unitVec * 1000 + centralObject.modelNode.getPos()
-            spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
-
-
-        def DrawCircleZ(self, centralObject, droneName, theta):
-            unitVec = defensePaths.circleZ(theta)
-            unitVec.normalize()
-            position = unitVec * 300  + centralObject.modelNode.getPos()
-            spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
-
-
-        fullCycle = 60
-
-        for j in range(fullCycle):
-            theta = j*6
-            spaceJamClasses.Drone.droneCount += 1
-            nickName = "Drone" + str(spaceJamClasses.Drone.droneCount)
-
-            DrawCloudDefense(self, self.Planet1, nickName)
-            DrawBaseballSeams(self, self.SpaceStation1, nickName, j, fullCycle, 2)
-            DrawCircleX(self, self.Planet2, nickName, theta )
-            DrawCircleY(self, self.Planet3, nickName, theta )
-            DrawCircleZ(self, self.Planet4, nickName, theta)
-
+        self.setScene()
+        self.taskMgr.add(self.orbit_task, "OrbitTask")
         self.Hero.setKeyBindings()
 
         self.cTrav = CollisionTraverser()
@@ -100,10 +30,90 @@ class MyApp(ShowBase):
         self.cTrav.addCollider(self.Hero.collisionNode, self.pusher)
         self.cTrav.showCollisions(self.render)
 
-        
 
-    
 
+
+
+
+
+
+
+        self.accept('escape', self.quit)
+
+
+    def setScene(self):
+            self.Universe = spaceJamClasses.Universe(self.loader, "./Assets/Universe/Universe.x", self.render, "Universe", "./Assets/Universe/images.jpeg", (0, 0, 0), 10000)
+            self.Sun = spaceJamClasses.Sun(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet3", "./Assets/Planets/images-3.png", (0, 0, 0), 500)
+            self.orbit_root = self.render.attachNewNode("orbit_root")
+
+            self.Planet1 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.orbit_root, "Planet1", "./Assets/Planets/images-1.jpeg", (0, 6000, 0), 250)
+            self.Planet2 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.orbit_root, "Planet2", "./Assets/Planets/images-2.jpeg", (0, 1400, 0), 300)
+            self.Planet4 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.orbit_root, "Planet4", "./Assets/Planets/images-4.png", (0, 2500, 0), 150)
+            self.Planet5 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.orbit_root, "Planet5", "./Assets/Planets/images-5.jpeg", (0, 3500, 0), 200)
+            self.Planet6 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.orbit_root, "Planet6", "./Assets/Planets/images-6.jpeg", (0, 4500, 0), 300)
+
+            self.SpaceStation1 = spaceJamClasses.SpaceStation(self.loader, "./Assets/Space Station/spaceStation.x", self.render, 'Space Station', "./Assets/Space Station/SpaceStation1_Dif2.png", (1500, 1000, -2000), 40)
+
+
+            self.Hero = playerClasses.SpaceShip(self.loader, self.camera, self.taskMgr, self.accept,"./Assets/Spaceships/Dumbledore.egg", self.render, "Hero", "./Assets/Spaceships/spacejet_N.png", Vec3(1000, 1200, -50), 50)
+
+            def DrawBaseballSeams(self, centralObject, droneName, step, numSeams, radius = 1):
+                    unitVec = defensePaths.BaseballSeams(step, numSeams, B= 0.4)
+                    unitVec.normalize()
+                    position = unitVec * radius * 250 + centralObject.modelNode.getPos()
+                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position ,5)
+
+            def DrawCloudDefense(self, centralObject, droneName):
+                    unitVec = defensePaths.Cloud()
+                    unitVec.normalize()
+                    position = unitVec * 500 + centralObject.modelNode.getPos()
+                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
+
+
+            def DrawCircleX(self, centralObject, droneName, theta):
+                    unitVec = defensePaths.circleX(theta)
+                    unitVec.normalize()
+                    position = unitVec * 600 + centralObject.modelNode.getPos()
+                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
+
+
+            def DrawCircleY(self, centralObject, droneName, theta):
+                    unitVec = defensePaths.circleY(theta)
+                    unitVec.normalize()
+                    position = unitVec * 1000 + centralObject.modelNode.getPos()
+                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
+
+
+            def DrawCircleZ(self, centralObject, droneName, theta):
+                    unitVec = defensePaths.circleZ(theta)
+                    unitVec.normalize()
+                    position = unitVec * 300  + centralObject.modelNode.getPos()
+                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
+
+
+            fullCycle = 60
+
+            for j in range(fullCycle):
+                        theta = j*6
+                        spaceJamClasses.Drone.droneCount += 1
+                        nickName = "Drone" + str(spaceJamClasses.Drone.droneCount)
+
+                        DrawCloudDefense(self, self.Planet1, nickName)
+                        DrawBaseballSeams(self, self.SpaceStation1, nickName, j, fullCycle, 2)
+                        DrawCircleX(self, self.Planet2, nickName, theta )
+                        DrawCircleY(self, self.Sun, nickName, theta )
+                        DrawCircleZ(self, self.Planet4, nickName, theta)
+
+                     # 4. Add a task to rotate the orbit root every frame
+
+    def orbit_task(self, task):
+            # Rotate the orbit root node around the Z-axis
+            # task.time * speed controls the orbital velocity
+            orbit_speed = 20.0  #degrees per second
+            self.orbit_root.setH(task.time * orbit_speed)
+            return Task.cont
+
+ 
 
   
 
