@@ -244,7 +244,7 @@ class SpaceShip(SphereCollideObject):
 
     def DestroyObject(self, hitID, hitPosition):
 
-         nodeID = self.render.find(hitID)
+         nodeID = self.render.find("**/" + hitID)
          nodeID.detachNode()
 
          self.explodeNode.setPos(hitPosition)

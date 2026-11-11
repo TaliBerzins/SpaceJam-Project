@@ -44,13 +44,18 @@ class MyApp(ShowBase):
     def setScene(self):
             self.Universe = spaceJamClasses.Universe(self.loader, "./Assets/Universe/Universe.x", self.render, "Universe", "./Assets/Universe/images.jpeg", (0, 0, 0), 10000)
             self.Sun = spaceJamClasses.Sun(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet3", "./Assets/Planets/images-3.png", (0, 0, 0), 500)
-            self.orbit_root = self.render.attachNewNode("orbit_root")
 
-            self.Planet1 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.orbit_root, "Planet1", "./Assets/Planets/images-1.jpeg", (0, 6000, 0), 250)
-            self.Planet2 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.orbit_root, "Planet2", "./Assets/Planets/images-2.jpeg", (0, 1400, 0), 300)
-            self.Planet4 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.orbit_root, "Planet4", "./Assets/Planets/images-4.png", (0, 2500, 0), 150)
-            self.Planet5 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.orbit_root, "Planet5", "./Assets/Planets/images-5.jpeg", (0, 3500, 0), 200)
-            self.Planet6 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.orbit_root, "Planet6", "./Assets/Planets/images-6.jpeg", (0, 4500, 0), 300)
+            self.planet1_orbit = self.render.attachNewNode("planet1_orbit")
+            self.planet2_orbit = self.render.attachNewNode("planet2_orbit")
+            self.planet3_orbit = self.render.attachNewNode("planet3_orbit")
+            self.planet4_orbit = self.render.attachNewNode("planet4_orbit")
+            self.planet5_orbit = self.render.attachNewNode("planet5_orbit")
+
+            self.Planet1 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet1_orbit, "Planet1", "./Assets/Planets/images-1.jpeg", (0, 6000, 0), 250)
+            self.Planet2 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet2_orbit, "Planet2", "./Assets/Planets/images-2.jpeg", (0, 1400, 0), 300)
+            self.Planet3 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet3_orbit, "Planet3", "./Assets/Planets/images-4.png", (0, 2500, 0), 150)
+            self.Planet4 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet4_orbit, "Planet4", "./Assets/Planets/images-5.jpeg", (0, 3500, 0), 200)
+            self.Planet5 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet5_orbit, "Planet5", "./Assets/Planets/images-6.jpeg", (0, 4500, 0), 300)
 
             self.SpaceStation1 = spaceJamClasses.SpaceStation(self.loader, "./Assets/Space Station/spaceStation.x", self.render, 'Space Station', "./Assets/Space Station/SpaceStation1_Dif2.png", (1500, 1000, -2000), 40)
 
@@ -110,7 +115,17 @@ class MyApp(ShowBase):
             # Rotate the orbit root node around the Z-axis
             # task.time * speed controls the orbital velocity
             orbit_speed = 20.0  #degrees per second
-            self.orbit_root.setH(task.time * orbit_speed)
+  # Rotates Planet1's separate orbit root around the Sun in the opposite direction
+            self.planet1_orbit.setH(task.time * (orbit_speed * -1))
+            self.Planet1.modelNode.setH(task.time * 50.0)  
+            self.planet2_orbit.setH(task.time * (orbit_speed * 1))
+            self.Planet2.modelNode.setH(task.time * 50.0)   
+            self.planet3_orbit.setH(task.time * (orbit_speed * -1))
+            self.Planet3.modelNode.setH(task.time * 50.0)  
+            self.planet4_orbit.setH(task.time * (orbit_speed * 1)) 
+            self.Planet4.modelNode.setH(task.time * 50.0)   
+            self.planet5_orbit.setH(task.time * (orbit_speed * -1))
+            self.Planet5.modelNode.setH(task.time * 50.0)  
             return Task.cont
 
  
