@@ -8,6 +8,7 @@ import re
 from direct.task import Task
 from direct.gui.OnscreenImage import OnscreenImage
 from SpaceJamClasses import Missile
+import random
 
 
 class SpaceShip(SphereCollideObject):
@@ -38,6 +39,7 @@ class SpaceShip(SphereCollideObject):
         self.setKeyBindings()
         self.reloadTime = .25
         self.missileDistance = 4000
+        self.rate = 25
         self.missileBay = 1
         self.cntExplode = 0
         self.explodeIntervals = {}
@@ -96,12 +98,12 @@ class SpaceShip(SphereCollideObject):
                         base.taskMgr.remove('forward-thrust')
 
     def ApplyThrust(self, task):
-                rate = 25
+                
 
                 trajectory = self.render.getRelativeVector(self.modelNode, Vec3.forward())
                 trajectory.normalize()
 
-                self.modelNode.setFluidPos(self.modelNode.getPos() + trajectory * rate)
+                self.modelNode.setFluidPos(self.modelNode.getPos() + trajectory * self.rate)
 
                 return task.cont
 
@@ -237,9 +239,20 @@ class SpaceShip(SphereCollideObject):
         if (strippedString == "Drone" or strippedString == "Planet" or strippedString == 'Space Station'):
              print(victim, ' hit at ', intoPosition)
              self.DestroyObject(victim, intoPosition)
+        elif(strippedString =="PowerUp"):
+             self.RandomPowerUp()
 
         print(shooter + 'is DONE.')
         Missile.Intervals[shooter].finish()
+
+    def RandomPowerUp(self):
+         if random.randint(1, 100) % 2 == 0:
+              self.rate *= 10
+              print("Speed increased!")
+         else:
+              self.missileDistance /= 2
+              print("Missile slows down")
+              
 
 
     def DestroyObject(self, hitID, hitPosition):
