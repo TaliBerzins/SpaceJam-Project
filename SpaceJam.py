@@ -71,15 +71,16 @@ class MyApp(ShowBase):
             def DrawCloudDefense(self, centralObject, droneName):
                     unitVec = defensePaths.Cloud()
                     unitVec.normalize()
-                    position = unitVec * 500 + centralObject.modelNode.getPos()
-                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
+                    position = unitVec * 600 
+
+                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", centralObject.droneRoot, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
 
 
             def DrawCircleX(self, centralObject, droneName, theta):
                     unitVec = defensePaths.circleX(theta)
                     unitVec.normalize()
-                    position = unitVec * 600 + centralObject.modelNode.getPos()
-                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
+                    position = unitVec * 600 
+                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", centralObject.droneRoot, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
 
 
             def DrawCircleY(self, centralObject, droneName, theta):
@@ -92,8 +93,8 @@ class MyApp(ShowBase):
             def DrawCircleZ(self, centralObject, droneName, theta):
                     unitVec = defensePaths.circleZ(theta)
                     unitVec.normalize()
-                    position = unitVec * 300  + centralObject.modelNode.getPos()
-                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
+                    position = unitVec * 300  
+                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", centralObject.droneRoot, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
 
 
             fullCycle = 60

@@ -17,6 +17,10 @@ class Planet(SphereCollideObject):
         self.modelNode.setPos(posVec)
         self.modelNode.setScale(scaleVec)
 
+ # Create an unscaled dummy node at the planet's position for drones/moons to attach to
+        self.droneRoot = parentNode.attachNewNode(nodeName + "droneRoot")
+        self.droneRoot.setPos(posVec)
+
         self.modelNode.setName(nodeName)
         tex = loader.loadTexture(texPath)
         self.modelNode.setTexture(tex,1)
@@ -84,6 +88,8 @@ class Drone(SphereCollideObject):
 
         self.modelNode.setPos(posVec)
         self.modelNode.setScale(scaleVec)
+
+
 
         self.modelNode.setName(nodeName)
         tex = loader.loadTexture(texPath)
