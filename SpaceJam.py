@@ -62,41 +62,44 @@ class MyApp(ShowBase):
 
             self.Hero = playerClasses.SpaceShip(self.loader, self.camera, self.taskMgr, self.accept,"./Assets/Spaceships/Dumbledore.egg", self.render, "Hero", "./Assets/Spaceships/spacejet_N.png", Vec3(1000, 1200, -50), 50)
             self.powerUp = spaceJamClasses.PowerUp(self.loader, "./Assets/Player/sphere.egg", self.render, "PowerUp", "./Assets/Player/sphere1_auv.jpg", (2000, 1500, -1500), 100)
+            self.Sentinal1 = spaceJamClasses.Orbiter(self.loader, self.taskMgr,  "./Assets/DroneDefender/DroneDefender.x", self.render, "Drone", 6.0,  "./Assets/DroneDefender/octotoad1_auv.png", self.Planet2, 900, "MLB", self.Hero)
+            self.Sentinal2 = spaceJamClasses.Orbiter(self.loader, self.taskMgr, "./Assets/DroneDefender/DroneDefender.x", self.render, "Drone", 6.0,  "./Assets/DroneDefender/octotoad1_auv.png", self.Planet5, 500, "Cloud", self.Hero)
+    
 
 
             def DrawBaseballSeams(self, centralObject, droneName, step, numSeams, radius = 1):
                     unitVec = defensePaths.BaseballSeams(step, numSeams, B= 0.4)
                     unitVec.normalize()
                     position = unitVec * radius * 250 + centralObject.modelNode.getPos()
-                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position ,5)
+                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/DroneDefender/octotoad1_auv.png", position ,5)
 
             def DrawCloudDefense(self, centralObject, droneName):
                     unitVec = defensePaths.Cloud()
                     unitVec.normalize()
                     position = unitVec * 600 
 
-                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", centralObject.droneRoot, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
+                    spaceJamClasses.Drone(self.loader, "./Assets/DroneDefender/DroneDefender.x", centralObject.droneRoot, droneName, "./Assets/DroneDefender/octotoad1_auv.png", position, 5)
 
 
             def DrawCircleX(self, centralObject, droneName, theta):
                     unitVec = defensePaths.circleX(theta)
                     unitVec.normalize()
                     position = unitVec * 600 
-                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", centralObject.droneRoot, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
+                    spaceJamClasses.Drone(self.loader, "./Assets/DroneDefender/DroneDefender.x", centralObject.droneRoot, droneName, "./Assets/DroneDefender/octotoad1_auv.png", position, 5)
 
 
             def DrawCircleY(self, centralObject, droneName, theta):
                     unitVec = defensePaths.circleY(theta)
                     unitVec.normalize()
                     position = unitVec * 1000 + centralObject.modelNode.getPos()
-                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", self.render, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
+                    spaceJamClasses.Drone(self.loader, "./Assets/DroneDefender/DroneDefender.x", self.render, droneName, "./Assets/DroneDefender/octotoad1_auv.png", position, 5)
 
 
             def DrawCircleZ(self, centralObject, droneName, theta):
                     unitVec = defensePaths.circleZ(theta)
                     unitVec.normalize()
                     position = unitVec * 300  
-                    spaceJamClasses.Drone(self.loader, "./Assets/Drone Defender/DroneDefender.x", centralObject.droneRoot, droneName, "./Assets/Drone Defender/octotoad1_auv.png", position, 5)
+                    spaceJamClasses.Drone(self.loader, "./Assets/DroneDefender/DroneDefender.x", centralObject.droneRoot, droneName, "./Assets/DroneDefender/octotoad1_auv.png", position, 5)
 
 
             fullCycle = 60
