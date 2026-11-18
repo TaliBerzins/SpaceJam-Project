@@ -7,7 +7,7 @@ from direct.particles.ParticleEffect import ParticleEffect
 import re
 from direct.task import Task
 from direct.gui.OnscreenImage import OnscreenImage
-from SpaceJamClasses import Missile
+from SpaceJamClasses import Missile, Sun
 import random
 
 
@@ -236,9 +236,16 @@ class SpaceShip(SphereCollideObject):
         pattern = r'[0-9]'
         strippedString = re.sub(pattern, '', victim)
         print(strippedString)
-        if (strippedString == "Drone" or strippedString == "Planet" or strippedString == 'Space Station'):
+        if (strippedString == "Drone"  or strippedString == 'Space Station'):
              print(victim, ' hit at ', intoPosition)
              self.DestroyObject(victim, intoPosition)
+        elif(strippedString == "Planet"):
+             into_np = entry.getIntoNodePath()
+             planet_node = into_np.getNetPythonTag('owner')
+             if planet_node.hp > 0:
+                self.DamageObject(into_np, intoPosition)
+             else:
+                self.DestroyObject(victim, intoPosition)
         elif(strippedString =="PowerUp"):
              self.RandomPowerUp()
 
@@ -252,6 +259,12 @@ class SpaceShip(SphereCollideObject):
          else:
               self.missileDistance /= 2
               print("Missile slows down")
+
+    def DamageObject(self, nodePath, hitPosition):
+         owner = nodePath.getNetPythonTag('owner')
+         if owner is not None:
+              owner.take_damage(100)
+
               
 
 

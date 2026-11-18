@@ -43,7 +43,7 @@ class MyApp(ShowBase):
 
     def setScene(self):
             self.Universe = spaceJamClasses.Universe(self.loader, "./Assets/Universe/Universe.x", self.render, "Universe", "./Assets/Universe/images.jpeg", (0, 0, 0), 10000)
-            self.Sun = spaceJamClasses.Sun(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet3", "./Assets/Planets/images-3.png", (0, 0, 0), 500)
+            self.Sun = spaceJamClasses.Sun(self.loader, "./Assets/Planets/protoPlanet.x", self.render, "Planet3", "./Assets/Planets/images-3.png", (0, 0, 0), 500, 1000)
 
             self.planet1_orbit = self.render.attachNewNode("planet1_orbit")
             self.planet2_orbit = self.render.attachNewNode("planet2_orbit")

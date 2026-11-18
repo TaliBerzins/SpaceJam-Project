@@ -4,6 +4,8 @@ from direct.task.Task import TaskManager
 import DefensePaths as defensePaths
 from direct.showbase.DirectObject import DirectObject
 from CollideObjectBase import *
+from panda3d.core import CardMaker
+
 
 
 
@@ -29,7 +31,7 @@ class Planet(SphereCollideObject):
 class Sun(SphereCollideObject):
 
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath,
-                  nodeName: str, texPath: str, posVec: Vec3, scaleVec: float):
+                  nodeName: str, texPath: str, posVec: Vec3, scaleVec: float, max_hp = 1000):
         super(Sun, self). __init__(loader, modelPath, parentNode, nodeName, Vec3(0,0,0), 1.1)
 
 
@@ -40,6 +42,60 @@ class Sun(SphereCollideObject):
         self.modelNode.setName(nodeName)
         tex = loader.loadTexture(texPath)
         self.modelNode.setTexture(tex,1)
+        self.collisionNode.setPythonTag("owner", self)
+
+# 1. Create billboarded health bar container above the planet
+        # self.hp_bar_root = self.modelNode.attachNewNode("hp_bar_root")
+        # self.hp_bar_root.setPos(0, 0, scaleVec + 100)
+        # self.hp_bar_root.reparent_to(parentNode)
+        # # self.hp_bar_root.setLightOff()  # Keep colors bright from all angles
+
+        self.max_hp = max_hp
+        self.hp = max_hp
+
+        self.bar_width = 400
+        self.bar_depth = 10
+        self.bar_height = 50
+
+        # # 2. Stationary 3D dark background box
+        # self.hp_bg = loader.loadModel("models/box")
+        # # self.hp_bg.reparentTo(self.hp_bar_root)
+        # self.hp_bg.setScale(bar_width, bar_depth, bar_height)
+        # self.hp_bg.setPos(0, 0, 0)
+        # self.hp_bg.setColor(0.15, 0.15, 0.15, 0.85)
+        # # self.hp_bg.setTransparency(True)
+
+        # 3. Left-aligned pivot wrapper for the green health fill
+        self.hp_fg_pivot = self.modelNode.attachNewNode("hp_fg_pivot")
+        self.hp_fg_pivot.setPos(-(self.bar_width/2), 0, scaleVec + 100)
+        self.hp_fg_pivot.reparent_to(parentNode)
+
+        # Slightly thicker than background box so faces never flicker
+        self.hp_fg = loader.loadModel("models/box")
+        self.hp_fg.reparentTo(self.hp_fg_pivot)
+        self.hp_fg.setScale(self.bar_width, self.bar_depth * 1.08, self.bar_height * 1.08)
+        self.hp_fg.setPos(0, 0, 0)
+        self.hp_fg.setTextureOff(1)
+        self.hp_fg_pivot.setLightOff(1)
+        self.hp_fg.setColor(0.1961, 0.8039, 0.1961, 1.0)
+
+        self.hp_fg_pivot.show()
+
+    def take_damage(self, amount):
+             self.hp -= amount
+             health_ratio = self.hp / self.max_hp
+             self.hp_fg.setScale(self.bar_width * health_ratio, self.bar_depth * 1.08, self.bar_height * 1.08)
+             self.hp_fg.setPos(0, 0, 0)
+             self.hp_fg.setTextureOff(1)
+             self.hp_fg_pivot.setLightOff(1)
+             self.hp_fg.setColor(0.1961, 0.8039, 0.1961, 1.0)
+
+             self.hp_fg_pivot.show()
+             if health_ratio<=0:
+                  self.hp_fg_pivot.hide()
+             
+
+  
 
 
 
