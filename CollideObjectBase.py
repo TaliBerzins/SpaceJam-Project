@@ -36,6 +36,8 @@ class CapsuleCollidableObject(CollidableObject):
         self.collisionNode.show()
 
 
+
+
 class SphereCollideObject(CollidableObject):
     def __init__(self, loader: Loader, modelPath:str, parentNode: NodePath, nodeName: str, colPositionVec: Vec3, colRadius: float):
         super(SphereCollideObject, self).__init__(loader, modelPath, parentNode, nodeName)

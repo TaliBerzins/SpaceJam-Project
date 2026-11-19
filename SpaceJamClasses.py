@@ -1,10 +1,10 @@
-from direct.showbase.ShowBase import ShowBase
 from panda3d.core import *
 from direct.task.Task import TaskManager
 import DefensePaths as defensePaths
-from direct.showbase.DirectObject import DirectObject
 from CollideObjectBase import *
 from panda3d.core import Vec3
+from panda3d.core import CardMaker, TransparencyAttrib, ColorBlendAttrib
+
 
 
 
@@ -209,7 +209,7 @@ class Missile(SphereCollideObject):
     cNodes = {}
     collisionSolids = {}
     Intervals = {}
-    missileCount = 0
+    count = 0
 
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, posVec: Vec3, scaleVec: float = 1.0):
                     super(Missile, self).__init__(loader, modelPath, parentNode, nodeName, Vec3(0, 0, 0), 3.0)
@@ -219,13 +219,59 @@ class Missile(SphereCollideObject):
                     self.modelNode.setPos(posVec)
                     
                     
-                    Missile.missileCount += 1
+                    Missile.count += 1
                     Missile.fireModels[nodeName] = self.modelNode
                     Missile.cNodes[nodeName] = self.collisionNode
     
                     Missile.collisionSolids[nodeName] = self.collisionNode.node().getSolid(0)
                     Missile.cNodes[nodeName].show()
-                    print("Fire missile #" + str(Missile.missileCount))
+                    print("Fire missile #" + str(Missile.count))
+
+
+class Laser(CapsuleCollidableObject):
+    fireModels = {}
+    cNodes = {}
+    collisionSolids = {}
+    Intervals = {}
+    count = 0
+    def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, posVec: Vec3, scaleVec: float = 1.0):
+        # Build the procedural quad directly under parentNode
+        length = 10
+        self.modelNode = self.create_laser_bolt(parentNode)
+        self.modelNode.setName(nodeName)
+        self.modelNode.setScale(scaleVec)
+        self.modelNode.setPos(posVec)
+
+        # Attach collision solid manually (CollisionBox or CollisionSphere)
+        cNode = CollisionNode(nodeName + '_cNode')
+        cNode.addSolid(CollisionCapsule(0, 0, 0, 0, length, 5, 4))
+        self.collisionNode = self.modelNode.attachNewNode(cNode)
+
+        Laser.count += 1
+        Laser.fireModels[nodeName] = self.modelNode
+        Laser.cNodes[nodeName] = self.collisionNode
+        Laser.collisionSolids[nodeName] = self.collisionNode.node().getSolid(0)
+        Laser.cNodes[nodeName].show()
+        print("Fire laser #" + str(Laser.count))
+
+    def create_laser_bolt(self, parentNode, length=10, width=2, color=(1, 0.1, 0.1, 1)):
+        cm = CardMaker("laser_beam")
+        cm.setFrame(-width / 2, width / 2, 0, length)
+
+        laser_np = parentNode.attachNewNode(cm.generate())
+        laser_np.setP(-90)
+        laser_np.setLightOff()
+        laser_np.setColorScale(*color)
+        laser_np.setTransparency(TransparencyAttrib.MAlpha)
+        laser_np.setAttrib(ColorBlendAttrib.make(
+            ColorBlendAttrib.MAdd,
+            ColorBlendAttrib.OIncomingAlpha,
+            ColorBlendAttrib.OOne
+        ))
+        laser_np.setTwoSided(True)
+        return laser_np
+
+
     
                     
 class PowerUp(SphereCollideObject):
