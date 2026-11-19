@@ -51,11 +51,11 @@ class MyApp(ShowBase):
             self.planet4_orbit = self.render.attachNewNode("planet4_orbit")
             self.planet5_orbit = self.render.attachNewNode("planet5_orbit")
 
-            self.Planet1 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet1_orbit, "Planet1", "./Assets/Planets/images-1.jpeg", (0, 6000, 0), 250)
-            self.Planet2 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet2_orbit, "Planet2", "./Assets/Planets/images-2.jpeg", (0, 1400, 0), 300)
-            self.Planet3 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet3_orbit, "Planet3", "./Assets/Planets/images-4.png", (0, 2500, 0), 150)
-            self.Planet4 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet4_orbit, "Planet4", "./Assets/Planets/images-5.jpeg", (0, 3500, 0), 200)
-            self.Planet5 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet5_orbit, "Planet5", "./Assets/Planets/images-6.jpeg", (0, 4500, 0), 300)
+            self.Planet1 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet1_orbit, "Planet1", "./Assets/Planets/images-1.jpeg", (0, 6000, 0), 250, 1000)
+            self.Planet2 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet2_orbit, "Planet2", "./Assets/Planets/images-2.jpeg", (0, 1400, 0), 300, 1000)
+            self.Planet3 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet3_orbit, "Planet3", "./Assets/Planets/images-4.png", (0, 2500, 0), 150, 1000)
+            self.Planet4 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet4_orbit, "Planet4", "./Assets/Planets/images-5.jpeg", (0, 3500, 0), 200, 1000)
+            self.Planet5 = spaceJamClasses.Planet(self.loader, "./Assets/Planets/protoPlanet.x", self.planet5_orbit, "Planet5", "./Assets/Planets/images-6.jpeg", (0, 4500, 0), 300, 1000)
 
             self.SpaceStation1 = spaceJamClasses.SpaceStation(self.loader, "./Assets/Space Station/spaceStation.x", self.render, 'Space Station', "./Assets/Space Station/SpaceStation1_Dif2.png", (1500, 1000, -2000), 40)
 
