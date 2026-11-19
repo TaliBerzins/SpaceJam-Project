@@ -236,7 +236,7 @@ class Laser(CapsuleCollidableObject):
     count = 0
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, posVec: Vec3, scaleVec: float = 1.0):
         # Build the procedural quad directly under parentNode
-        length = 10
+        length = 50
         self.modelNode = self.create_laser_bolt(parentNode)
         self.modelNode.setName(nodeName)
         self.modelNode.setScale(scaleVec)
@@ -244,7 +244,7 @@ class Laser(CapsuleCollidableObject):
 
         # Attach collision solid manually (CollisionBox or CollisionSphere)
         cNode = CollisionNode(nodeName + '_cNode')
-        cNode.addSolid(CollisionCapsule(0, 0, 0, 0, length, 5, 4))
+        cNode.addSolid(CollisionCapsule(0, 0, 0, 0, length, 0, 1.5))
         self.collisionNode = self.modelNode.attachNewNode(cNode)
 
         Laser.count += 1
@@ -254,22 +254,30 @@ class Laser(CapsuleCollidableObject):
         Laser.cNodes[nodeName].show()
         print("Fire laser #" + str(Laser.count))
 
-    def create_laser_bolt(self, parentNode, length=10, width=2, color=(1, 0.1, 0.1, 1)):
+    def create_laser_bolt(self, parentNode, length=50, width=3, color=(1, 0.1, 0.1, 1)):
+
+        bolt_root = parentNode.attachNewNode("laser_bolt")
         cm = CardMaker("laser_beam")
         cm.setFrame(-width / 2, width / 2, 0, length)
+        card_geom = cm.generate()
 
-        laser_np = parentNode.attachNewNode(cm.generate())
-        laser_np.setP(-90)
-        laser_np.setLightOff()
-        laser_np.setColorScale(*color)
-        laser_np.setTransparency(TransparencyAttrib.MAlpha)
-        laser_np.setAttrib(ColorBlendAttrib.make(
+    # Horizontal card (lies flat in XY plane pointing +Y)
+        card1 = bolt_root.attachNewNode(card_geom)
+        card1.setP(-90)
+
+        # Vertical card (stands upright in YZ plane pointing +Y)
+        card2 = bolt_root.attachNewNode(card_geom)
+        card2.setHpr(90, 0, 90)
+        bolt_root.setLightOff()
+        bolt_root.setColorScale(*color)
+        bolt_root.setTransparency(TransparencyAttrib.MAlpha)
+        bolt_root.setAttrib(ColorBlendAttrib.make(
             ColorBlendAttrib.MAdd,
             ColorBlendAttrib.OIncomingAlpha,
             ColorBlendAttrib.OOne
         ))
-        laser_np.setTwoSided(True)
-        return laser_np
+        bolt_root.setTwoSided(True)
+        return bolt_root
 
 
     

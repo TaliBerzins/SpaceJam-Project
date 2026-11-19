@@ -60,10 +60,10 @@ class SpaceShip(SphereCollideObject):
             }
         }
 
-        self.reloadTime = .25
-        self.missileDistance = 4000
+
+
         self.rate = 25
-        self.missileBay = 1
+        # self.missileBay = 1
         self.cntExplode = 0
         self.explodeIntervals = {}
         self.traverser = CollisionTraverser()
@@ -229,6 +229,7 @@ class SpaceShip(SphereCollideObject):
                 projectile = ProjectileClass(
                     self.loader, weapon['model'], self.render, tag, posVec, weapon['scale']
                 )
+                projectile.modelNode.lookAt(travVec)
 
                 # Use weapon['duration'] to control speed
                 ProjectileClass.Intervals[tag] = projectile.modelNode.posInterval(
@@ -306,7 +307,7 @@ class SpaceShip(SphereCollideObject):
              into_np = entry.getIntoNodePath()
              planet_node = into_np.getNetPythonTag('owner')
              if planet_node.hp > 0:
-                self.DamageObject(into_np, intoPosition)
+                self.DamageObject(into_np, shooter)
              else:
                 self.DestroyObject(victim, intoPosition)
         elif(strippedString =="PowerUp"):
@@ -328,10 +329,16 @@ class SpaceShip(SphereCollideObject):
               self.missileDistance /= 2
               print("Missile slows down")
 
-    def DamageObject(self, nodePath, hitPosition):
+    def DamageObject(self, nodePath,  projectile):
+        #  nodeID = self.render.find("**/" + projectile)
+        #  nodeID.detachNode()
          owner = nodePath.getNetPythonTag('owner')
          if owner is not None:
-              owner.take_damage(100)
+              if projectile == 'laser':
+
+                owner.take_damage(100)
+              else: 
+                owner.take_damage(500)
 
               
 
