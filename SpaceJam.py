@@ -47,6 +47,8 @@ class MyApp(ShowBase):
 
             self.planet1_orbit = self.render.attachNewNode("planet1_orbit")
             self.planet2_orbit = self.render.attachNewNode("planet2_orbit")
+            self.planet2_orbit.setPos(-4000, 0, -4000)
+
             self.planet3_orbit = self.render.attachNewNode("planet3_orbit")
             self.planet4_orbit = self.render.attachNewNode("planet4_orbit")
             self.planet5_orbit = self.render.attachNewNode("planet5_orbit")
@@ -62,8 +64,8 @@ class MyApp(ShowBase):
 
             self.Hero = playerClasses.SpaceShip(self.loader, self.camera, self.taskMgr, self.accept,"./Assets/Spaceships/Dumbledore.egg", self.render, "Hero", "./Assets/Spaceships/spacejet_N.png", Vec3(1000, 1200, -50), 50)
             self.powerUp = spaceJamClasses.PowerUp(self.loader, "./Assets/Player/sphere.egg", self.render, "PowerUp", "./Assets/Player/sphere1_auv.jpg", (2000, 1500, -1500), 100)
-            self.Sentinal1 = spaceJamClasses.Orbiter(self.loader, self.taskMgr,  "./Assets/DroneDefender/DroneDefender.x", self.render, "Drone", 6.0,  "./Assets/DroneDefender/octotoad1_auv.png", self.Planet2, 900, "MLB", self.Hero)
-            self.Sentinal2 = spaceJamClasses.Orbiter(self.loader, self.taskMgr, "./Assets/DroneDefender/DroneDefender.x", self.render, "Drone", 6.0,  "./Assets/DroneDefender/octotoad1_auv.png", self.Planet5, 500, "Cloud", self.Hero)
+            self.Sentinal1 = spaceJamClasses.Orbiter(self.loader, self.taskMgr,  "./Assets/DroneDefender/DroneDefender.x", self.Planet2.droneRoot, "Drone", 6.0,  "./Assets/DroneDefender/octotoad1_auv.png", self.Planet2, 900, "MLB", self.Hero)
+            self.Sentinal2 = spaceJamClasses.Orbiter(self.loader, self.taskMgr, "./Assets/DroneDefender/DroneDefender.x", self.Planet5.droneRoot, "Drone", 6.0,  "./Assets/DroneDefender/octotoad1_auv.png", self.Planet5, 500, "Cloud", self.Hero)
     
 
 

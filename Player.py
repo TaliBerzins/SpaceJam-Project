@@ -118,7 +118,7 @@ class SpaceShip(SphereCollideObject):
         self.accept("e", self.Roll, [-1, 1])      # Roll Right
         self.accept("e-up", self.Roll, [-1, 0])
         self.accept('f', self.Fire, ['missile'])
-        self.accept('mouse1', self.Fire, ['laser'])
+        self.accept('space', self.Fire, ['laser'])
 
 
 
@@ -344,9 +344,16 @@ class SpaceShip(SphereCollideObject):
 
 
     def DestroyObject(self, hitID, hitPosition):
+         
+         
 
          nodeID = self.render.find("**/" + hitID)
          nodeID.detachNode()
+
+         if hitID.startswith("Drone"):
+              self.explodeEffect.setScale(20)
+         else:
+            self.explodeEffect.setScale(200)
 
          self.explodeNode.setPos(hitPosition)
          self.Explode()
@@ -354,23 +361,24 @@ class SpaceShip(SphereCollideObject):
     def Explode(self):
          self.cntExplode += 1
          tag = 'particles-' + str(self.cntExplode)
+         # Reset and start immediately so it never misses t == 0
+         self.explodeEffect.disable()
+         self.explodeEffect.start(self.explodeNode, self.render)
 
          self.explodeIntervals[tag] = LerpFunc(self.ExplodeLight, duration = 4.0)
          self.explodeIntervals[tag].start()
 
 
     def ExplodeLight(self, t):
-         if t == 1.0 and self.explodeEffect:
+         if t >= 1.0 and self.explodeEffect:
               self.explodeEffect.disable()
 
-         elif t == 0:
-              self.explodeEffect.start(self.explodeNode)
+       
 
     def SetParticles(self):
          base.enableParticles()
          self.explodeEffect = ParticleEffect()
          self.explodeEffect.loadConfig("./Assets/ParticleEffects/basic_xpld_efx.ptf")
-         self.explodeEffect.setScale(20)
          self.explodeNode = self.render.attachNewNode('ExplosionEffects')
 
 
