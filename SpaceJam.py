@@ -66,6 +66,8 @@ class MyApp(ShowBase):
             self.powerUp = spaceJamClasses.PowerUp(self.loader, "./Assets/Player/sphere.egg", self.render, "PowerUp", "./Assets/Player/sphere1_auv.jpg", (2000, 1500, -1500), 100)
             self.Sentinal1 = spaceJamClasses.Orbiter(self.loader, self.taskMgr,  "./Assets/DroneDefender/DroneDefender.x", self.Planet2.droneRoot, "Drone", 6.0,  "./Assets/DroneDefender/octotoad1_auv.png", self.Planet2, 900, "MLB", self.Hero)
             self.Sentinal2 = spaceJamClasses.Orbiter(self.loader, self.taskMgr, "./Assets/DroneDefender/DroneDefender.x", self.Planet5.droneRoot, "Drone", 6.0,  "./Assets/DroneDefender/octotoad1_auv.png", self.Planet5, 500, "Cloud", self.Hero)
+            self.Sentinal3 = spaceJamClasses.Orbiter(self.loader, self.taskMgr,  "./Assets/DroneDefender/DroneDefender.x", self.Planet2.droneRoot, "Drone", 6.0,  "./Assets/DroneDefender/octotoad1_auv.png", self.Planet2, 700, "MLB", self.Hero)
+            self.Sentinal4 = spaceJamClasses.Orbiter(self.loader, self.taskMgr, "./Assets/DroneDefender/DroneDefender.x", self.Planet5.droneRoot, "Drone", 6.0,  "./Assets/DroneDefender/octotoad1_auv.png", self.Planet5, 300, "Cloud", self.Hero)
     
 
 

@@ -245,7 +245,7 @@ class SpaceShip(SphereCollideObject):
          else:
                 taskName = f"reload_{weaponType}"
                 if not self.taskMgr.hasTaskNamed(taskName):
-                    print(f"Initializing {weaponType} reload...")
+                    # print(f"Initializing {weaponType} reload...")
                     self.taskMgr.doMethodLater(
                         weapon['reloadTime'], self.Reload, taskName, extraArgs=[weaponType], appendTask=True
                     )
@@ -253,7 +253,7 @@ class SpaceShip(SphereCollideObject):
     def Reload(self, weaponType, task):
         weapon = self.weapons[weaponType]
         weapon['ammo'] = weapon['maxAmmo']
-        print(f"{weaponType.capitalize()} reloaded!")
+        # print(f"{weaponType.capitalize()} reloaded!")
         return Task.done
     def CheckIntervals(self, task):
     # Loop over every weapon class defined in self.weapons
@@ -272,7 +272,7 @@ class SpaceShip(SphereCollideObject):
                     del ProjectileClass.cNodes[tag]
                     del ProjectileClass.collisionSolids[tag]
 
-                    print(f"{tag} has reached the end of its fire solution")
+                    # print(f"{tag} has reached the end of its fire solution")
 
         return task.cont
 
@@ -283,25 +283,25 @@ class SpaceShip(SphereCollideObject):
 
     def HandleInto(self, entry):
         fromNode = entry.getFromNodePath().getName()
-        print("fromNode: " + fromNode)
+        # print("fromNode: " + fromNode)
         intoNode = entry.getIntoNodePath().getName()
-        print("intoNode: " + intoNode)
+        # print("intoNode: " + intoNode)
         intoPosition = Vec3(entry.getSurfacePoint(self.render))
         tempVar = fromNode.split('_')
-        print("tempVar: " + str(tempVar))
+        # print("tempVar: " + str(tempVar))
         shooter = tempVar[0]
-        print("Shooter: " + str(shooter))
+        # print("Shooter: " + str(shooter))
         tempVar = intoNode.split('_')
-        print("TempVar1: " + str(tempVar))
+        # print("TempVar1: " + str(tempVar))
         tempVar = intoNode.split('_')
-        print("TempVar2: " + str(tempVar))
+        # print("TempVar2: " + str(tempVar))
         victim = tempVar[0]
-        print("Victim: " + str(victim))
+        # print("Victim: " + str(victim))
         pattern = r'[0-9]'
         strippedString = re.sub(pattern, '', victim)
-        print(strippedString)
+        # print(strippedString)
         if (strippedString == "Drone"  or strippedString == 'Space Station'):
-             print(victim, ' hit at ', intoPosition)
+            #  print(victim, ' hit at ', intoPosition)
              self.DestroyObject(victim, intoPosition)
         elif(strippedString == "Planet"):
              into_np = entry.getIntoNodePath()
@@ -313,7 +313,7 @@ class SpaceShip(SphereCollideObject):
         elif(strippedString =="PowerUp"):
              self.RandomPowerUp()
 
-        print(shooter + 'is DONE.')
+        # print(shooter + 'is DONE.')
         for weapon in self.weapons.values():
             ProjectileClass = weapon['class']
             if shooter in ProjectileClass.Intervals:
@@ -324,10 +324,10 @@ class SpaceShip(SphereCollideObject):
     def RandomPowerUp(self):
          if random.randint(1, 100) % 2 == 0:
               self.rate *= 10
-              print("Speed increased!")
+            #   print("Speed increased!")
          else:
               self.missileDistance /= 2
-              print("Missile slows down")
+            #   print("Missile slows down")
 
     def DamageObject(self, nodePath,  projectile):
         #  nodeID = self.render.find("**/" + projectile)
