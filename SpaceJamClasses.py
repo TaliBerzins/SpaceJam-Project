@@ -225,7 +225,7 @@ class Missile(SphereCollideObject):
     
                     Missile.collisionSolids[nodeName] = self.collisionNode.node().getSolid(0)
                     Missile.cNodes[nodeName].show()
-                    print("Fire missile #" + str(Missile.count))
+                    # print("Fire missile #" + str(Missile.count))
 
 
 class Laser(CapsuleCollidableObject):
@@ -252,7 +252,7 @@ class Laser(CapsuleCollidableObject):
         Laser.cNodes[nodeName] = self.collisionNode
         Laser.collisionSolids[nodeName] = self.collisionNode.node().getSolid(0)
         Laser.cNodes[nodeName].show()
-        print("Fire laser #" + str(Laser.count))
+        # print("Fire laser #" + str(Laser.count))
 
     def create_laser_bolt(self, parentNode, length=50, width=3, color=(1, 0.1, 0.1, 1)):
 
